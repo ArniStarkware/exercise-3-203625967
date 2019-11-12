@@ -1,0 +1,2 @@
+class ContextManager:
+    pass # TODO

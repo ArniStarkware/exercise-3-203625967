@@ -1,0 +1,2 @@
+class Thought:
+    pass # TODO

@@ -1,0 +1,2 @@
+class TemporaryFile:
+    pass # TODO

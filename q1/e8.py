@@ -1,0 +1,2 @@
+class Suppress:
+    pass # TODO

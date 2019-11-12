@@ -1,0 +1,2 @@
+class StandardOutput:
+    pass # TODO
