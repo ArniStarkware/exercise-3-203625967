@@ -1,2 +1,0 @@
-class TemporaryDirectory:
-    pass # TODO

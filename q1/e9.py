@@ -1,2 +1,0 @@
-class StandardOutput:
-    pass # TODO

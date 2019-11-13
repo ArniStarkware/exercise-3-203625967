@@ -17,13 +17,13 @@ def d(tmp_path):
         os.chdir(old_cwd)
 
 
-@pytest.mark.xpass
+@pytest.mark.xfail
 def test_ls():
     from e6 import ls
     assert sorted(repr(ls).split()) == ['d1', 'f1']
 
 
-@pytest.mark.xpass
+@pytest.mark.xfail
 def test_ls_l():
     from e6 import ls, l
     lines = sorted(repr(ls -l).splitlines()[1:])
@@ -31,13 +31,13 @@ def test_ls_l():
     assert lines[1].startswith('d') and lines[1].endswith('d1')
 
 
-@pytest.mark.xpass
+@pytest.mark.xfail
 def test_wc_c_f1():
     from e6 import wc, c
     assert repr(wc -c < 'f1').strip() == '1'
 
 
-@pytest.mark.xpass
+@pytest.mark.xfail
 def test_ls_l_wc_c():
     from e6 import ls, l, wc, c
     assert 50 <= int(repr(ls -l | wc -c)) <= 150

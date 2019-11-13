@@ -1,2 +1,0 @@
-class ContextManager:
-    pass # TODO

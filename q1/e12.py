@@ -1,2 +1,0 @@
-class TypedProperty:
-    pass # TODO

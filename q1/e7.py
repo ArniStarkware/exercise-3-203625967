@@ -1,2 +1,2 @@
-class Timer:
+class TypedProperty:
     pass # TODO

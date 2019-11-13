@@ -1,27 +1,53 @@
-import time
-
 import pytest
 
-
-from e7 import Timer
-
-
-def test_timer():
-    started = time.time()
-    with Timer() as timer:
-        time.sleep(1)
-    stopped = time.time()
-    assert abs(timer.started - started) < 0.1
-    assert abs(timer.stopped - stopped) < 0.1
-    assert 1 <= timer.elapsed <= 2
+from e7 import TypedProperty
 
 
-def test_timer_error():
-    started = time.time()
+@pytest.fixture
+def A():
+    class A:
+        x = TypedProperty(int)
+        y = TypedProperty(str)
+    return A
+
+
+@pytest.fixture
+def a(A):
+    return A()
+
+
+def test_get(a):
+    assert a.x == 0
+    assert a.y == ''
+
+
+def test_set(a):
+    a.x = 1
+    assert a.x == 1
+    a.y = 'Hello, world!'
+    assert a.y == 'Hello, world!'
+
+
+def test_set_error(a):
     with pytest.raises(ValueError):
-        with Timer() as timer:
-            raise ValueError()
-    stopped = time.time()
-    assert abs(timer.started - started) < 0.1
-    assert abs(timer.stopped - stopped) < 0.1
-    assert 0 <= timer.elapsed <= 1
+        a.x = 'Hello, world!'
+    with pytest.raises(ValueError):
+        a.y = 1
+
+
+def test_delete(a):
+    a.x = 1
+    del a.x
+    assert a.x == 0
+    del a.x
+    assert a.x == 0
+    a.y = 'Hello, world!'
+    del a.y
+    assert a.y == ''
+    del a.y
+    assert a.y == ''
+
+
+def test_get_class(A):
+    assert isinstance(A.x, TypedProperty)
+    assert isinstance(A.y, TypedProperty)

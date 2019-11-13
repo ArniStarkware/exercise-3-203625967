@@ -1,2 +1,0 @@
-class TemporaryFile:
-    pass # TODO
