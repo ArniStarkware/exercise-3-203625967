@@ -36,20 +36,28 @@ def test_repr(listener):
     assert repr(listener) == f'Listener(port={_PORT!r}, host={_HOST!r}, backlog={_BACKLOG!r}, reuseaddr={_REUSEADDR!r})'
 
 
-def test_context_manager(listener):
+def test_close(listener):
     assert socket.socket().connect_ex((_HOST, _PORT)) != 0
-    with listener:
+    listener.start()
+    try:
         time.sleep(0.1)
         assert socket.socket().connect_ex((_HOST, _PORT)) == 0
+    finally:
+        listener.stop()
     assert socket.socket().connect_ex((_HOST, _PORT)) != 0
 
 
 def test_accept(listener):
     sock = socket.socket()
-    with listener:
+    listener.start()
+    try:
         time.sleep(0.1)
         sock.connect((_HOST, _PORT))
         connection = listener.accept()
-        with connection:
+        try:
             sock.sendall(_DATA)
             assert connection.receive(len(_DATA)) == _DATA
+        finally:
+            connection.close()
+    finally:
+        listener.stop()
