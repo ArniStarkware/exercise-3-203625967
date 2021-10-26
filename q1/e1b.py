@@ -1,7 +1,4 @@
 def dfs(tree):
-    stack = [tree]
-    while stack:
-        cur = stack.pop()
-        yield cur[0]
-        for child in cur[1][::-1]:
-            stack.append(child)
+    yield tree[0]
+    for child in tree[1]:
+        yield from dfs(child)
