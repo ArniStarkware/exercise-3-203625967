@@ -33,10 +33,10 @@ class LazyExpression:
     def __rmul__(self,other):
         new_expression = LazyExpression(other, ' * ', self)
         return new_expression
-    def __div__(self, other):
+    def __truediv__(self, other):
         new_expression = LazyExpression(self, ' / ', other)
         return new_expression
-    def __rdiv__(self,other):
+    def __rtruediv__(self,other):
         new_expression = LazyExpression(other, ' / ', self)
         return new_expression
     def __pos__(self):
@@ -47,7 +47,43 @@ class LazyExpression:
         return new_expression
     
     def evaluate(self, **kwargs):
+        if isinstance(self,LazyVariable):
+            try:
+                return kwargs[self.name]
+            except KeyError as err:
+                raise ValueError
+        if len(self.expressionList) == 1:
+            expression = self.expressionList[0]
+            return expression
+        subevaluates = []
+        for subexpression in self.expressionList:
+            if isinstance(subexpression, LazyExpression):
+                subevaluates.append(subexpression.evaluate(**kwargs))
+            else:
+                subevaluates.append(subexpression)
+
+        if len(subevaluates) == 2:
+            if subevaluates[0] == '+':
+                return + subevaluates[1]
+            elif subevaluates[0] == '-':
+                return - subevaluates[1]
+            else:
+                raise ValueError
+        elif len(subevaluates) == 3:
+            if subevaluates[1] == ' + ':
+                return subevaluates[0] + subevaluates[2]
+            elif subevaluates[1] == ' - ':
+                return subevaluates[0] - subevaluates[2]
+            elif subevaluates[1] == ' * ':
+                return subevaluates[0] * subevaluates[2]
+            elif subevaluates[1] == ' / ':
+                return subevaluates[0] / subevaluates[2]
+            else:
+                raise ValueError
+        else:
+            raise ValueError
         pass
+            
 
 class LazyVariable(LazyExpression):
     # TODO
@@ -56,3 +92,10 @@ class LazyVariable(LazyExpression):
         self.name = name
     def __repr__(self) -> str:
         return self.name
+
+
+x = LazyVariable('x')
+y = LazyVariable('y')
+
+z = x + y
+print(z.evaluate(x = 1, y = 2))
